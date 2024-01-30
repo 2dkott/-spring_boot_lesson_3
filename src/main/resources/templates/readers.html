@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 3px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+<h2>Читатели</h2>
+<table>
+    <thead>
+    <tr>
+        <th> Name </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reader : ${readers}">
+        <td><span th:text="${reader.name}"> Title </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

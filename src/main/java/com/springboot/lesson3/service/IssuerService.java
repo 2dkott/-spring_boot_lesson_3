@@ -1,6 +1,7 @@
 package com.springboot.lesson3.service;
 
 import com.springboot.lesson3.api.IssueRequest;
+import com.springboot.lesson3.model.Book;
 import com.springboot.lesson3.model.BookLimitRetrieval;
 import com.springboot.lesson3.model.Issue;
 import com.springboot.lesson3.model.Reader;
@@ -46,6 +47,18 @@ public class IssuerService {
       issueRepository.updateReturnDatOfIssue(issue1);
     });
     return issue;
+  }
+
+  public List<Issue> getAllIssues() {
+    return issueRepository.getAll();
+  }
+
+  public Optional<Book> getBookByIssue(Issue issue) {
+    return Optional.ofNullable(bookRepository.getBookById(issue.getBookId()));
+  }
+
+  public Optional<Reader> getReaderByIssue(Issue issue) {
+    return Optional.ofNullable(readerRepository.getReaderById(issue.getReaderId()));
   }
 
 }

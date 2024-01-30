@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 3px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+<h2>Выдача книг</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Книга</th>
+        <th>Читатель</th>
+        <th>Когда взял</th>
+        <th>Когда вернул</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="issue : ${issues}">
+        <td><span th:text="${issue.getBook().getName()}"> </span></td>
+        <td><span th:text="${issue.getReader().getName()}"> </span></td>
+        <td><span th:text="${issue.getIssue().getIssuedDate()}"> </span></td>
+        <td><span th:text="${issue.getIssue().getReturnDate()}"> </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
