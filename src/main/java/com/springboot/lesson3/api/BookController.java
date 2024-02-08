@@ -2,6 +2,7 @@ package com.springboot.lesson3.api;
 
 import com.springboot.lesson3.model.Book;
 import com.springboot.lesson3.service.BookService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
+@Tag(name="Books")
 public class BookController {
 
     @Autowired

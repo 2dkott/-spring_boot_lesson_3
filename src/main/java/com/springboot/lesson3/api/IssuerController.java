@@ -1,11 +1,11 @@
 package com.springboot.lesson3.api;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.springboot.lesson3.model.Issue;
 import com.springboot.lesson3.service.BookLimitExceededException;
 import com.springboot.lesson3.service.IssuerService;
 import com.springboot.lesson3.service.NoBookException;
 import com.springboot.lesson3.service.NoReaderException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,8 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/issue")
+@RequestMapping("/issues")
+@Tag(name="Issues")
 public class IssuerController {
 
   @Autowired
