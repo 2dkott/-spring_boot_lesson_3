@@ -1,37 +1,46 @@
 package com.springboot.lesson3.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Запись о факте выдачи книги (в БД)
- */
+@Entity
+@Table(name = "issues")
 @Data
 public class Issue {
 
-  public static long sequence = 1L;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private  long id;
 
-  private final long id;
-  private final long bookId;
-  private final long readerId;
-  private final LocalDateTime issuedDate;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "books_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.NO_ACTION)
+  private Book book;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "readers_id", nullable = false)
+  @OnDelete(action = OnDeleteAction.NO_ACTION)
+  private Reader reader;
+
+  @Column(name = "issueDate")
+  private LocalDateTime issuedDate;
+
+  @Column(name = "returnDate")
   private LocalDateTime returnDate;
 
-  public Issue(long bookId, long readerId) {
-    this.id = sequence++;
-    this.bookId = bookId;
-    this.readerId = readerId;
-    this.issuedDate = LocalDateTime.now();
-  }
-
-  public Issue(long bookId, long readerId, LocalDateTime returnDate) {
-    this.id = sequence++;
-    this.bookId = bookId;
-    this.readerId = readerId;
+  public Issue(Book book, Reader reader, LocalDateTime returnDate) {
+    this.book = book;
+    this.reader = reader;
     this.issuedDate = LocalDateTime.now();
     this.returnDate = returnDate;
   }
 
+  public Issue() {
+
+  }
 }

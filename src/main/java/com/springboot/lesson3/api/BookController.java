@@ -3,6 +3,7 @@ package com.springboot.lesson3.api;
 import com.springboot.lesson3.model.Book;
 import com.springboot.lesson3.model.Reader;
 import com.springboot.lesson3.service.BookService;
+import com.springboot.lesson3.service.NoBookException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -94,12 +95,14 @@ public class BookController {
                     content = @Content) })
     @DeleteMapping("/{id}")
     public ResponseEntity<Book> addBook(@PathVariable long id) {
-        Optional<Book> book;
+        Book book;
         try {
             book = bookService.removeById(id);
+        } catch (NoBookException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return book.map(book1 -> ResponseEntity.status(HttpStatus.OK).body(book1)).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.status(HttpStatus.OK).body(book);
     }
 }

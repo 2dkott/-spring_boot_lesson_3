@@ -3,6 +3,8 @@ package com.springboot.lesson3.api;
 import com.springboot.lesson3.model.Issue;
 import com.springboot.lesson3.model.Reader;
 import com.springboot.lesson3.service.IssuerService;
+import com.springboot.lesson3.service.NoBookException;
+import com.springboot.lesson3.service.NoReaderException;
 import com.springboot.lesson3.service.ReaderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -95,13 +97,15 @@ public class ReaderController {
                     content = @Content) })
     @DeleteMapping("/{id}")
     public ResponseEntity<Reader> deleteReader(@PathVariable long id) {
-        Optional<Reader> reader;
+        Reader reader;
         try {
             reader = readerService.removeById(id);
+        } catch (NoReaderException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return reader.map(reader1 -> ResponseEntity.status(HttpStatus.OK).body(reader1)).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return ResponseEntity.status(HttpStatus.OK).body(reader);
     }
 
     @Operation(summary = "Get Issues of the Reader by  Reader Id")

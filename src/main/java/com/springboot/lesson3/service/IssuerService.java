@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -25,40 +27,39 @@ public class IssuerService {
   private final BookLimitRetrieval bookLimitRetrieval;
 
   public Issue issue(IssueRequest request) throws NoBookException, NoReaderException, BookLimitExceededException {
-    Optional<Reader> reader = Optional.ofNullable(readerRepository.getReaderById(request.getReaderId()));
+    Reader reader = readerRepository.findById(request.getReaderId()).orElseThrow(() -> new NoReaderException(request.getReaderId()));;
+    Book book = bookRepository.findById(request.getBookId()).orElseThrow(() -> new NoBookException(request.getBookId()));
 
-    if (bookRepository.getBookById(request.getBookId()) == null) throw new NoBookException(request.getBookId());
-    if (reader.isEmpty()) throw new NoReaderException(request.getReaderId());
-
-
-    if (bookLimitRetrieval.doIssueBook(reader.get(), issueRepository.getIssuesByReaderId(reader.get().getId()))) {
-      Issue issue = new Issue(request.getBookId(), request.getReaderId());
+    if (bookLimitRetrieval.doIssueBook(reader, issueRepository.findIssuesByReader(reader))) {
+      Issue issue = new Issue(book, reader, null);
       return issueRepository.save(issue);
     }
 
-    throw new BookLimitExceededException(reader.get().getId());
+    throw new BookLimitExceededException(reader.getId());
   }
 
-  public Optional<Issue> returnIssue(IssueRequest request) {
-    List<Issue> issues = issueRepository.getIssuesByReaderId(request.getReaderId());
-    Optional<Issue> issue = issues.stream().filter(issue1 -> issue1.getBookId()==request.getBookId()).findFirst();
+  public Optional<Issue> returnIssue(IssueRequest request) throws NoReaderException {
+    Reader reader = readerRepository.findById(request.getReaderId()).orElseThrow(() -> new NoReaderException(request.getReaderId()));;
+
+    List<Issue> issues = issueRepository.findIssuesByReader(reader);
+    Optional<Issue> issue = issues.stream().filter(issue1 -> issue1.getBook().getId()==request.getBookId()).findFirst();
     issue.ifPresent(issue1 -> {
       issue1.setReturnDate(request.getReturnDate());
-      issueRepository.updateReturnDatOfIssue(issue1);
+      issueRepository.save(issue1);
     });
     return issue;
   }
 
   public List<Issue> getAllIssues() {
-    return issueRepository.getAll();
+    return StreamSupport.stream(issueRepository.findAll().spliterator(), false).toList();
   }
 
   public Optional<Book> getBookByIssue(Issue issue) {
-    return Optional.ofNullable(bookRepository.getBookById(issue.getBookId()));
+    return bookRepository.findById(issue.getBook().getId());
   }
 
   public Optional<Reader> getReaderByIssue(Issue issue) {
-    return Optional.ofNullable(readerRepository.getReaderById(issue.getReaderId()));
+    return readerRepository.findById(issue.getReader().getId());
   }
 
 }

@@ -41,7 +41,7 @@ public class UiReaderController {
             List<Issue> issues = readerService.getAllIssues(reader1);
             List<Book> books = new ArrayList<>();
             issues.forEach(issue -> {
-                Optional<Book> book = bookService.getByID(issue.getBookId());
+                Optional<Book> book = bookService.getByID(issue.getBook().getId());
                 book.ifPresent(books::add);
             });
             model.addAttribute("reader", reader1);

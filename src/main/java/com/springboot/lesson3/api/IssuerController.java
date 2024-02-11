@@ -48,7 +48,7 @@ public class IssuerController {
           @ApiResponse(responseCode = "302", description = "Reader was found and updated",
                   content = @Content) })
   @PutMapping()
-  public ResponseEntity<Issue> returnBook(@RequestBody IssueRequest request) {
+  public ResponseEntity<Issue> returnBook(@RequestBody IssueRequest request) throws NoReaderException {
     log.info("Получен запрос на возврат: readerId = {}, bookId = {}", request.getReaderId(), request.getBookId());
     Optional<Issue> issue = service.returnIssue(request);
     return issue.map(issue1 -> ResponseEntity.status(HttpStatus.FOUND).body(issue1)).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

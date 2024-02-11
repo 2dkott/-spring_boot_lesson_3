@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -21,23 +22,23 @@ public class ReaderService {
 
     public Reader add(ReaderRequest request) {
         Reader reader = new Reader(request.getReaderName());
-        return readerRepository.add(reader);
+        return readerRepository.save(reader);
     }
     public List<Reader> getAll() {
-        return readerRepository.getAll();
+        return StreamSupport.stream(readerRepository.findAll().spliterator(), false).toList();
     }
 
     public Optional<Reader> getByID(long id) {
-        return Optional.ofNullable(readerRepository.getReaderById(id));
+        return readerRepository.findById(id);
     }
 
     public List<Issue> getAllIssues(Reader reader) {
-        return issueRepository.getIssuesByReaderId(reader.getId());
+        return issueRepository.findIssuesByReader(reader);
     }
 
-    public Optional<Reader> removeById(long id) {
-        Optional<Reader> readerToDelete = Optional.ofNullable(readerRepository.getReaderById(id));
-        readerToDelete.ifPresent(readerRepository::removeReader);
-        return readerToDelete;
+    public Reader removeById(long id) throws NoReaderException {
+        Reader reader = readerRepository.findById(id).orElseThrow(() -> new NoReaderException(id));;
+        readerRepository.delete(reader);
+        return reader;
     }
 }

@@ -1,19 +1,24 @@
 package com.springboot.lesson3.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@Entity
+@Table(name = "readers")
 public class Reader {
 
-  public static long sequence = 1L;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-  private final long id;
-  private final String name;
+  @Column(name = "name")
+  private String name;
 
   public Reader(String name) {
-    this(sequence++, name);
+    this.name = name;
   }
 
+  public Reader() {}
 }
