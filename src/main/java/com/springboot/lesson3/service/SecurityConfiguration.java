@@ -15,7 +15,7 @@ class  SecurityConfiguration {
                 .authorizeHttpRequests(registry -> registry.requestMatchers("/ui/books/**").authenticated()
                         .requestMatchers("/ui/issues/**").hasAuthority("admin")
                         .requestMatchers("/ui/readers/**").hasAuthority("reader")
-                        .anyRequest().permitAll())
+                        .anyRequest().permitAll()).csrf().disable()
                 .formLogin(Customizer.withDefaults())
                 .build();
     }

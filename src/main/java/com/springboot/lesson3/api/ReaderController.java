@@ -55,7 +55,7 @@ public class ReaderController {
             @ApiResponse(responseCode = "404", description = "Reader not found",
                     content = @Content) })
     @GetMapping("/{id}")
-    public ResponseEntity<Reader> getReaderById(@PathVariable long id) {
+    public ResponseEntity<Reader> getReaderById(@PathVariable("id") long id) {
         Optional<Reader> reader;
         try {
             reader = readerService.getByID(id);

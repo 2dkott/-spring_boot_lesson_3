@@ -17,7 +17,6 @@ public class BookService {
 
     final private BookRepository bookRepository;
 
-    @PostConstruct
     public void generateData() {
         bookRepository.saveAll(List.of(
                 new Book("Война и Мира", "Л.Н.Толстой"),

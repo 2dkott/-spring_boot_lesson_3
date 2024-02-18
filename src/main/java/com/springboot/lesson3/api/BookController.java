@@ -53,11 +53,12 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found",
                     content = @Content) })
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getById(@PathVariable long id) {
+    public ResponseEntity<Book> getById(@PathVariable("id") long id) {
         Optional<Book> book;
         try {
             book = bookService.getByID(id);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return book.map(book1 -> ResponseEntity.status(HttpStatus.FOUND).body(book1)).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
